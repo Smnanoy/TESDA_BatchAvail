@@ -19,4 +19,16 @@ def enroll(request, batch_id):
         Enrollment.objects.create(trainee=request.user, batch=batch)
         messages.success(request, 'Your enrollment is now pending approval.')
 
-    return redirect('home')
+    return redirect('trainee_home')
+
+
+@login_required
+@require_POST
+def cancel_enrollment(request, pk):
+    enrollment = get_object_or_404(Enrollment, pk=pk, trainee=request.user)
+    if enrollment.status == 'pending':
+        enrollment.delete()
+        messages.success(request, 'Your application was cancelled.')
+    else:
+        messages.error(request, 'Only pending applications can be cancelled.')
+    return redirect('trainee_home')

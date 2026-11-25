@@ -1,0 +1,14 @@
+<h2>Announcements</h2>
+{% for n in announcements %}<p><b>{{ n.title }}</b>: {{ n.message }}</p>{% empty %}<p>None</p>{% endfor %}
+
+<h2>My enrollments</h2>
+{% for e in my_enrollments %}<p>{{ e.batch }} - {{ e.status }}</p>{% empty %}<p>None</p>{% endfor %}
+
+<h2>Open batches</h2>
+{% for b in open_batches %}
+  <form method="post" action="{% url 'enroll' b.pk %}">
+    {% csrf_token %}
+    {{ b }} ({{ b.slots_left }} left)
+    <button>Enroll</button>
+  </form>
+{% empty %}<p>None</p>{% endfor %}
